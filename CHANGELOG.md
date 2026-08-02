@@ -1,10 +1,17 @@
 # Changelog
 
-All notable changes use the versioning scheme in `docs/VERSIONING.md` (`M.m.b.p[-release]`).
+All notable changes use the versioning scheme in `docs/VERSIONING.md` (`M.m.b.p[.release]`).
 
 ## Unreleased
 
-## 0.1.107.2-pre — Version scheme: four-part patch segment
+## 0.1.108.1.pre — Foundry-compatible versioning + Encounters tab fix
+
+- Foundry cannot treat `0.1.107.2-pre` as newer than `0.1.107-pre` (non-numeric segments like `2-pre`).
+- Ship **`0.1.108.1.pre`**, which Foundry detects from all legacy `0.1.107.x` installs including `107.2-pre`.
+- Patches continue as `0.1.108.2.pre`, …; feature builds use `0.1.109.0.pre`. See `docs/VERSIONING.md`.
+- Fixes Scene Encounters tab injection (`onRenderError`, duplicate tab, v13 Handlebars API).
+
+## 0.1.107.2-pre — Version scheme: four-part patch segment (broken Foundry updates)
 
 - Replace `M.m.b-hf#-release` with **`M.m.b.p-release`** (`p` always visible; `0` for feature builds, increments for patches).
 - Foundry `isNewerVersion` now sorts patches correctly (`0.1.107.1-pre` > `0.1.107.0-pre`).

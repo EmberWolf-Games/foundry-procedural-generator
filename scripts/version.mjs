@@ -3,7 +3,8 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const VERSION_PATTERN = /^(\d+)\.(\d+)\.(\d+)\.(\d+)(?:-(pre|alpha|beta|rc))?$/;
+const VERSION_PATTERN = /^(\d+)\.(\d+)\.(\d+)\.(\d+)(?:\.(pre|alpha|beta|rc))?$/;
+const LEGACY_HYPHEN_CHANNEL_PATTERN = /^(\d+)\.(\d+)\.(\d+)\.(\d+)(?:-(pre|alpha|beta|rc))?$/;
 const LEGACY_HOTFIX_PATTERN = /^(\d+)\.(\d+)\.(\d+)-hf(\d+)(?:-(pre|alpha|beta|rc))?$/;
 const LEGACY_BUILD_PATTERN = /^(\d+)\.(\d+)\.(\d+)(?:-(pre|alpha|beta|rc))?$/;
 
@@ -13,20 +14,25 @@ export const VERSION_FILES = Object.freeze([
   { path: "package.json", kind: "json" }
 ]);
 
+function partsFromMatch(match) {
+  return {
+    major: Number(match[1]),
+    minor: Number(match[2]),
+    build: Number(match[3]),
+    patch: Number(match[4] ?? 0),
+    release: match[5] ?? null,
+    raw: match.input
+  };
+}
+
 export function parseVersion(version) {
   const raw = String(version).trim();
 
   let match = raw.match(VERSION_PATTERN);
-  if (match) {
-    return {
-      major: Number(match[1]),
-      minor: Number(match[2]),
-      build: Number(match[3]),
-      patch: Number(match[4]),
-      release: match[5] ?? null,
-      raw
-    };
-  }
+  if (match) return partsFromMatch(match);
+
+  match = raw.match(LEGACY_HYPHEN_CHANNEL_PATTERN);
+  if (match) return partsFromMatch(match);
 
   match = raw.match(LEGACY_HOTFIX_PATTERN);
   if (match) {
@@ -52,12 +58,12 @@ export function parseVersion(version) {
     };
   }
 
-  throw new Error(`Invalid module version '${version}'. Expected M.m.b.p[-release].`);
+  throw new Error(`Invalid module version '${version}'. Expected M.m.b.p[.release].`);
 }
 
 export function formatVersion(parts) {
   let value = `${parts.major}.${parts.minor}.${parts.build}.${parts.patch}`;
-  if (parts.release) value += `-${parts.release}`;
+  if (parts.release) value += `.${parts.release}`;
   return value;
 }
 
@@ -83,22 +89,27 @@ export function bumpPatch(version) {
 /** @deprecated Use bumpPatch — kept for transitional scripts. */
 export const bumpHotfix = bumpPatch;
 
-/** Mirrors Foundry's foundry.utils.isNewerVersion using parsed M.m.b.p segments. */
-export function isFoundryNewer(v1, v0) {
-  const left = parseVersion(v1);
-  const right = parseVersion(v0);
-  const segments = [
-    [left.major, right.major],
-    [left.minor, right.minor],
-    [left.build, right.build],
-    [left.patch, right.patch]
-  ];
+/** Foundry's native isNewerVersion (dot-separated segments, numeric when possible). */
+export function foundryCompareSegments(v1, v0) {
+  const p1 = String(v1).split(".");
+  const p0 = String(v0).split(".");
+  const len = Math.max(p1.length, p0.length);
 
-  for (const [a, b] of segments) {
-    if (a > b) return true;
-    if (a < b) return false;
+  for (let index = 0; index < len; index++) {
+    let a = p1[index] ?? 0;
+    let b = p0[index] ?? 0;
+    const na = Number(a);
+    const nb = Number(b);
+    a = Number.isNaN(na) ? a : na;
+    b = Number.isNaN(nb) ? b : nb;
+    if (a > b) return 1;
+    if (a < b) return -1;
   }
-  return false;
+  return 0;
+}
+
+export function isFoundryNewer(v1, v0) {
+  return foundryCompareSegments(v1, v0) > 0;
 }
 
 export function readCurrentVersion() {

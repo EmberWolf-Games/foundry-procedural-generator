@@ -9,7 +9,7 @@ alwaysApply: true
 
 - Canonical repo: `https://github.com/EmberWolf-Games/foundry-procedural-generator.git`
 - Module ID: `foundry-procedural-generator`
-- Current version: see `module.json` / `docs/VERSIONING.md` (format `M.m.b.p[-release]`)
+- Current version: see `module.json` / `docs/VERSIONING.md` (format `M.m.b.p[.release]`, dot before channel)
 - **Version bumps:** increment **b** only for meaningful feature changes (resets **p** to `0`); patches increment **p** only. CI auto-bumps **p** after releases.
 - Read `CURSOR_HANDOFF.md` and all files in `docs/` before substantive edits.
 
