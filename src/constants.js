@@ -1,6 +1,6 @@
 export const MODULE_ID = "foundry-procedural-generator";
 export const MODULE_TITLE = "Foundry Procedural Generator";
-export const MODULE_VERSION = "0.1.104-pre";
+export const MODULE_VERSION = "0.1.105-pre";
 
 export const SETTINGS = Object.freeze({
   ENABLED: "enabled",
