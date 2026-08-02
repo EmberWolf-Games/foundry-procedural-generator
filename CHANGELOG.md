@@ -4,6 +4,13 @@ All notable changes use the versioning scheme in `docs/VERSIONING.md` (`M.m.b[-h
 
 ## Unreleased
 
+## 0.1.107-hf1-pre — Fix Scene Encounters tab injection
+
+- Fix `onRenderError is not defined`, which blocked tab content from rendering.
+- Remove duplicate `renderDocumentSheetV2` hook so the dice tab is injected once.
+- Use v13 namespaced Handlebars APIs (`foundry.applications.handlebars.renderTemplate` / `loadTemplates`).
+- Insert the Encounters panel alongside other Scene Config tab sections.
+
 ## 0.1.107-pre — Foundry update fix (scene config Encounters tab)
 
 - Renumber to `0.1.107-pre` so Foundry detects an update from `0.1.105-pre` / `0.1.106-pre` (Foundry compares numeric build segments; `0.1.102-hf4-pre` is treated as older than `0.1.105-pre`).

@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
 import {
+  encountersTabNav,
   encountersTabPanel,
   findTabContainer,
   findTabNav,
+  hasEncountersTab,
   isSceneConfigApp
 } from "../src/ui/scene-config.js";
 
@@ -14,6 +16,7 @@ function node(tag, { className, dataTab, children = [], dataset = null } = {}) {
     },
     dataset: dataset ?? (dataTab ? { tab: dataTab, group: "sheet" } : {}),
     children,
+    parentElement: null,
     closest(selector) {
       if (selector === "nav.tabs, nav[data-group]") {
         return el.tagName === "NAV" ? el : null;
@@ -21,6 +24,7 @@ function node(tag, { className, dataTab, children = [], dataset = null } = {}) {
       return null;
     }
   };
+  for (const child of children) child.parentElement = el;
   return el;
 }
 
@@ -65,8 +69,23 @@ function matches(element, selector) {
   if (selector === "nav.tabs") {
     return element.tagName === "NAV" && element.classList.contains("tabs");
   }
-  if (selector === '[data-tab="fpg-encounters"]') {
-    return element.dataset.tab === "fpg-encounters";
+  if (selector === 'section.tab[data-group="sheet"]') {
+    return element.tagName === "SECTION"
+      && element.classList.contains("tab")
+      && element.dataset.group === "sheet";
+  }
+  if (selector === 'a.item[data-tab="fpg-encounters"]') {
+    return element.tagName === "A"
+      && element.classList.contains("item")
+      && element.dataset.tab === "fpg-encounters";
+  }
+  if (selector === 'section.tab[data-tab="fpg-encounters"]') {
+    return element.tagName === "SECTION"
+      && element.classList.contains("tab")
+      && element.dataset.tab === "fpg-encounters";
+  }
+  if (selector === '[data-tab="fpg-encounters"]:not(.item)') {
+    return element.dataset.tab === "fpg-encounters" && !element.classList.contains("item");
   }
   if (selector === "form") {
     return element.tagName === "FORM";
@@ -75,16 +94,21 @@ function matches(element, selector) {
 }
 
 const nav = node("nav", { className: "tabs", dataset: { group: "sheet" } });
-const navLink = node("a", { className: "item", dataTab: "basics" });
-nav.children = [navLink];
-const form = node("form");
 const basicsPanel = node("section", { className: "tab", dataTab: "basics" });
-form.children = [basicsPanel];
-const root = createRoot(nav, form);
+const form = node("form", { children: [nav, basicsPanel] });
+const root = createRoot(form);
 
 assert.equal(findTabNav(root), nav);
-assert.equal(findTabContainer(root), form);
-assert.equal(encountersTabPanel(root), null);
+assert.equal(findTabContainer(root, nav), form);
+assert.equal(hasEncountersTab(root), false);
+
+const navLink = node("a", { className: "item", dataTab: "fpg-encounters" });
+nav.children.push(navLink);
+const panel = node("section", { className: "tab", dataTab: "fpg-encounters" });
+form.children.push(panel);
+assert.equal(hasEncountersTab(root), true);
+assert.equal(encountersTabNav(root), navLink);
+assert.equal(encountersTabPanel(root), panel);
 
 assert.equal(isSceneConfigApp({ document: { documentName: "Scene" }, options: { classes: ["scene-config"] } }), true);
 assert.equal(isSceneConfigApp({ document: { documentName: "Actor" }, options: { classes: ["actor-sheet"] } }), false);
