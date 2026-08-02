@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -45,15 +46,29 @@ jobs:
           body: |
             Automated release for `${{ steps.version.outputs.value }}`.
 
-            Foundry VTT update check uses the stable `manifest` and `download` URLs in `module.json`.
-            Install or update from **Module Management → Install Module → Manifest URL**:
+            Foundry VTT install manifest URL:
 
             `https://github.com/EmberWolf-Games/foundry-procedural-generator/releases/latest/download/module.json`
+
+            Requires a **public** GitHub repository so Foundry can fetch release assets without authentication.
           files: |
             dist/foundry-procedural-generator.zip
             dist/module.json
           generate_release_notes: true
+          draft: false
+          prerelease: false
           make_latest: true
+
+      - name: Verify public manifest URL (Foundry install check)
+        run: |
+          MANIFEST_URL="https://github.com/EmberWolf-Games/foundry-procedural-generator/releases/latest/download/module.json"
+          ZIP_URL="https://github.com/EmberWolf-Games/foundry-procedural-generator/releases/latest/download/foundry-procedural-generator.zip"
+          echo "Checking $MANIFEST_URL"
+          curl -fsSL "$MANIFEST_URL" -o /tmp/module.json
+          test -s /tmp/module.json
+          node -e "const m=require('/tmp/module.json'); if (m.id !== 'foundry-procedural-generator') throw new Error('Invalid manifest id')"
+          echo "Checking $ZIP_URL"
+          curl -fsSLI "$ZIP_URL" | grep -i '^HTTP/.* 200'
 
       - name: Bump build for next release
         id: next

@@ -36,6 +36,14 @@ Copy or symlink this folder into:
 
 Enable the module in a test world running Foundry VTT v13.
 
+## Install from GitHub (manifest URL)
+
+```text
+https://github.com/EmberWolf-Games/foundry-procedural-generator/releases/latest/download/module.json
+```
+
+The repository must be **public** so Foundry can fetch release assets without login. See `docs/INSTALL.md` if you see a manifest-not-found error.
+
 ## Prototype setup
 
 In Module Settings, set:

@@ -76,6 +76,15 @@ Install from **Setup → Install Module → Manifest URL** using the manifest li
 
 When migrating to a Forge VTT production server, keep the same version string scheme and point Forge package metadata at the equivalent release manifest/download URLs for that host.
 
+### Troubleshooting manifest install
+
+Foundry shows **No module manifest found** when either:
+
+1. The GitHub repository is **private** (Foundry cannot authenticate).
+2. No GitHub release is marked **Latest** (for example every release was flagged **Pre-release**).
+
+See `docs/INSTALL.md` for verification commands and fixes.
+
 ### Manual version changes
 
 Use `node scripts/version.mjs bump-build` for a local build bump, or edit `src/constants.js`, `module.json`, and `package.json` together for minor, hotfix, or channel changes. Commit the new version before pushing; CI will release that version and then bump the build for the next cycle.

@@ -40,7 +40,7 @@ function copyReleaseTree() {
 function createZip() {
   if (process.platform === "win32") {
     execSync(
-      `powershell -NoProfile -Command "Compress-Archive -Path '${STAGE}\\*' -DestinationPath '${ZIP}' -Force"`,
+      `powershell -NoProfile -Command "Compress-Archive -Path '${STAGE}' -DestinationPath '${ZIP}' -Force"`,
       { stdio: "inherit" }
     );
     return;
