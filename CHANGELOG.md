@@ -4,6 +4,11 @@ All notable changes use the versioning scheme in `docs/VERSIONING.md` (`M.m.b[-h
 
 ## Unreleased
 
+## 0.1.105-pre — Restore Scene config hook for Random Encounters
+
+- Use `renderSceneConfig` instead of `renderApplicationV2`; SceneConfig sets `BASE_APPLICATION` so the generic AppV2 hook never fires in v13.
+- Keep Basics tab content selector (`section.tab[data-tab="basics"]`) to avoid layout breakage.
+
 ## 0.1.104-pre — Fix Scene config layout deformation
 
 - Target the Basics tab **content panel** (`section.tab[data-tab="basics"]`) instead of the tab nav link, which was breaking Scene Configuration layout in v13.

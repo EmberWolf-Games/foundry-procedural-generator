@@ -12,14 +12,21 @@ function resolveElement(element) {
 /** Tab content panel only — never match nav links that also use data-tab. */
 export function basicsTab(element) {
   const root = resolveElement(element);
-  if (!root?.querySelector) return null;
+  if (!root) return null;
+
+  if (root.matches?.('section.tab[data-tab="basics"], section[data-tab="basics"]')) {
+    return root;
+  }
+
+  if (!root.querySelector) return null;
 
   return root.querySelector('section.tab[data-tab="basics"]')
     ?? root.querySelector('section[data-tab="basics"]');
 }
 
 function isSceneConfigApp(app) {
-  return app?.constructor?.name === "SceneConfig";
+  return app?.constructor?.name === "SceneConfig"
+    || app?.document?.documentName === "Scene";
 }
 
 export async function injectSceneExplorationConfig(app, element) {
@@ -45,7 +52,7 @@ export function registerSceneConfigHook() {
     loadTemplates([TEMPLATE]);
   });
 
-  Hooks.on("renderApplicationV2", (app, element) => {
+  Hooks.on("renderSceneConfig", (app, element) => {
     injectSceneExplorationConfig(app, element).catch(onRenderError);
   });
 
