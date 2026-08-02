@@ -27,7 +27,10 @@ export function getCompatibilityReport() {
     foundry: {
       version: foundryVersion,
       minimum: SUPPORTED.FOUNDRY_MINIMUM,
+      verified: SUPPORTED.FOUNDRY_VERIFIED,
       supported: isAtLeast(foundryVersion, SUPPORTED.FOUNDRY_MINIMUM),
+      verifiedMatch: isAtLeast(foundryVersion, SUPPORTED.FOUNDRY_MINIMUM)
+        && !foundry.utils.isNewerVersion(foundryVersion, SUPPORTED.FOUNDRY_VERIFIED),
       generation: game.release?.generation ?? null
     },
     system: {
@@ -35,7 +38,11 @@ export function getCompatibilityReport() {
       version: systemVersion,
       expectedId: "dnd5e",
       minimum: SUPPORTED.DND5E_MINIMUM,
-      supported: systemId === "dnd5e" && isAtLeast(systemVersion, SUPPORTED.DND5E_MINIMUM)
+      verified: SUPPORTED.DND5E_VERIFIED,
+      supported: systemId === "dnd5e" && isAtLeast(systemVersion, SUPPORTED.DND5E_MINIMUM),
+      verifiedMatch: systemId === "dnd5e"
+        && isAtLeast(systemVersion, SUPPORTED.DND5E_MINIMUM)
+        && !foundry.utils.isNewerVersion(systemVersion, SUPPORTED.DND5E_VERIFIED)
     },
     integrations: {
       midiQol: moduleStatus(SUPPORTED.MODULES.MIDI_QOL),

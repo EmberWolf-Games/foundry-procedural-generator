@@ -2,14 +2,15 @@
   "id": "foundry-procedural-generator",
   "title": "Foundry Procedural Generator",
   "description": "Deterministic procedural encounter generation for D&D 5e exploration scenes, with integration support for Midi QOL, Monk's Active Tile Triggers, and Seasons & Stars.",
-  "version": "0.1.101-pre",
+  "version": "0.1.102-pre",
   "authors": [
     {
       "name": "Project Owner"
     }
   ],
   "compatibility": {
-    "minimum": "13.351"
+    "minimum": "13.351",
+    "verified": "13.351"
   },
   "esmodules": [
     "src/main.js"
@@ -36,7 +37,8 @@
         "id": "dnd5e",
         "type": "system",
         "compatibility": {
-          "minimum": "5.3.3"
+          "minimum": "5.3.3",
+          "verified": "5.3.3"
         }
       }
     ],

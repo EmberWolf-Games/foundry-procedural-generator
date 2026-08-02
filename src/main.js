@@ -1,5 +1,6 @@
 import { MODULE_ID, MODULE_TITLE, MODULE_VERSION } from "./constants.js";
 import { registerSettings } from "./settings.js";
+import { registerSceneConfigHook } from "./ui/scene-config.js";
 import { onStopToken } from "./services/exploration-monitor.js";
 import { api } from "./api.js";
 import { compatibilityProblems, getCompatibilityReport } from "./integrations/compatibility.js";
@@ -7,6 +8,7 @@ import { log } from "./log.js";
 
 Hooks.once("init", () => {
   registerSettings();
+  registerSceneConfigHook();
   log.info(`${MODULE_TITLE} ${MODULE_VERSION} initializing.`);
 });
 

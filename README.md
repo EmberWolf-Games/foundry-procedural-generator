@@ -46,15 +46,21 @@ The repository must be **public** so Foundry can fetch release assets without lo
 
 ## Prototype setup
 
-In Module Settings, set:
+### World settings (Configure Settings → Module Settings)
 
-- **Exploration Scene UUID**
-- **Party Token UUID**
-- **Encounter Chance** (0–100)
+- **Party Token UUID** — the Token that triggers encounter checks on flagged Scenes
+- **Default encounter chance** (0–100) — used unless a Scene overrides it
 - **Prototype Width/Height**
 - **Auto-activate Generated Scene**
 
-The exploration Scene should use a square grid. Each square may represent any campaign distance; the module keys cells by Foundry grid coordinates rather than by the Scene's displayed unit.
+### Scene settings (Scene Configuration → Basics tab)
+
+Open any Scene's configuration sheet and use the **Random Encounters** section:
+
+- **Random encounters enabled** — flag this Scene for movement-based encounter checks
+- **Encounter chance override** — optional per-Scene percentage (blank uses the world default)
+
+Multiple Scenes in the same session can each be flagged independently. Only the active Scene's flag is evaluated when the party Token stops moving.
 
 
 ## Integration contract

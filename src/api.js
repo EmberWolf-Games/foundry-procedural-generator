@@ -6,6 +6,7 @@ import { getEncounterTimeContext } from "./integrations/seasons-stars-adapter.js
 import { getMidiQolCapabilities } from "./integrations/midi-qol-adapter.js";
 
 let lastGeneratedSceneUuid = null;
+let lastExplorationSceneUuid = null;
 
 export const api = Object.freeze({
   getCompatibilityReport,
@@ -14,9 +15,13 @@ export const api = Object.freeze({
   async generatePrototype({
     seed = `manual::${Date.now()}`,
     cellKey = "manual",
-    sourceSceneUuid = game.settings.get(MODULE_ID, SETTINGS.EXPLORATION_SCENE_UUID),
+    sourceSceneUuid = canvas.scene?.uuid ?? lastExplorationSceneUuid,
     activate = false
   } = {}) {
+    if (!sourceSceneUuid) {
+      throw new Error("No source Scene UUID available. Activate a Scene or pass sourceSceneUuid.");
+    }
+
     const plan = buildPrototypePlan({
       seed,
       cellKey,
@@ -26,14 +31,14 @@ export const api = Object.freeze({
     });
     const scene = await commitPrototypePlan(plan, { activate });
     lastGeneratedSceneUuid = scene.uuid;
+    lastExplorationSceneUuid = sourceSceneUuid;
     return { scene, plan };
   },
 
-  async returnToExploration() {
-    const uuid = game.settings.get(MODULE_ID, SETTINGS.EXPLORATION_SCENE_UUID);
-    const scene = await fromUuid(uuid);
+  async returnToExploration(sceneUuid = lastExplorationSceneUuid ?? canvas.scene?.uuid) {
+    const scene = await fromUuid(sceneUuid);
     if (!scene || scene.documentName !== "Scene") {
-      throw new Error("Configured exploration Scene UUID is invalid.");
+      throw new Error("Exploration Scene UUID is invalid.");
     }
     return scene.activate();
   },
@@ -53,5 +58,9 @@ export const api = Object.freeze({
     await scene.delete();
     if (lastGeneratedSceneUuid === sceneUuid) lastGeneratedSceneUuid = null;
     return true;
+  },
+
+  rememberExplorationScene(sceneUuid) {
+    lastExplorationSceneUuid = sceneUuid;
   }
 });

@@ -1,4 +1,22 @@
 {
   "FPG.Title": "Foundry Procedural Generator",
-  "FPG.Notification.GenerationFailed": "Procedural encounter generation failed. See the console for details."
+  "FPG.Notification.GenerationFailed": "Procedural encounter generation failed. See the console for details.",
+  "FPG.Settings.EnabledName": "Enable random encounter triggers",
+  "FPG.Settings.EnabledHint": "Master switch for movement-based encounter checks on flagged Scenes.",
+  "FPG.Settings.PartyTokenName": "Party Token UUID",
+  "FPG.Settings.PartyTokenHint": "Example: Scene.abc123.Token.def456. The designated party Token that triggers checks on flagged Scenes.",
+  "FPG.Settings.EncounterChanceName": "Default encounter chance",
+  "FPG.Settings.EncounterChanceHint": "Default percentage chance for newly entered cells on flagged Scenes. Scenes may override this value.",
+  "FPG.Settings.PrototypeWidthName": "Prototype width",
+  "FPG.Settings.PrototypeWidthHint": "Generated Scene width in tactical grid cells.",
+  "FPG.Settings.PrototypeHeightName": "Prototype height",
+  "FPG.Settings.PrototypeHeightHint": "Generated Scene height in tactical grid cells.",
+  "FPG.Settings.AutoActivateName": "Auto-activate generated Scene",
+  "FPG.Settings.AutoActivateHint": "Activate the encounter Scene immediately after generation.",
+  "FPG.Settings.DebugLevelName": "Log level",
+  "FPG.SceneConfig.Legend": "Random Encounters",
+  "FPG.SceneConfig.Hint": "Enable encounter checks for this Scene when the configured party Token enters a new grid cell.",
+  "FPG.SceneConfig.RandomEncounters": "Random encounters enabled",
+  "FPG.SceneConfig.EncounterChance": "Encounter chance override",
+  "FPG.SceneConfig.EncounterChanceHint": "Leave blank to use the world default encounter chance."
 }

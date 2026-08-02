@@ -4,6 +4,7 @@ import { deriveEncounterSeed } from "../core/seed.js";
 import { buildPrototypePlan } from "../generation/prototype-generator.js";
 import { commitPrototypePlan } from "../adapters/foundry-scene-adapter.js";
 import { isCellProcessed, markCell } from "../persistence/exploration-state.js";
+import { encounterChanceForScene } from "../persistence/scene-exploration-config.js";
 import { log } from "../log.js";
 import { getEncounterTimeContext } from "../integrations/seasons-stars-adapter.js";
 
@@ -47,7 +48,10 @@ export async function processEnteredCell(scene, tokenDocument, cellKey) {
     };
     const seed = deriveEncounterSeed(seedMaterial);
     const checkRng = createRng(seed).stream("check");
-    const chancePercent = Number(game.settings.get(MODULE_ID, SETTINGS.ENCOUNTER_CHANCE));
+    const chancePercent = encounterChanceForScene(
+      scene,
+      game.settings.get(MODULE_ID, SETTINGS.ENCOUNTER_CHANCE)
+    );
     const checkRoll = checkRng.next();
     const occurs = checkRoll < chancePercent / 100;
     Hooks.callAll(HOOKS.ENCOUNTER_CHECK_RESOLVED, {
@@ -92,6 +96,8 @@ export async function processEnteredCell(scene, tokenDocument, cellKey) {
     Hooks.callAll(HOOKS.SCENE_GENERATED, {
       sourceScene: scene, tokenDocument, cellKey, generatedScene, seed, timeContext
     });
+
+    game.modules.get(MODULE_ID)?.api?.rememberExplorationScene(scene.uuid);
 
     return generatedScene;
   } catch (error) {

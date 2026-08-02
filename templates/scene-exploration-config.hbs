@@ -1,0 +1,32 @@
+<fieldset class="fpg-scene-exploration">
+  <legend>{{localize "FPG.SceneConfig.Legend"}}</legend>
+  <p class="hint">{{localize "FPG.SceneConfig.Hint"}}</p>
+
+  <div class="form-group">
+    <label>{{localize "FPG.SceneConfig.RandomEncounters"}}</label>
+    <input
+      type="checkbox"
+      name="flags.{{moduleId}}.exploration.randomEncounters"
+      {{#if randomEncounters}}checked{{/if}}
+      data-dtype="Boolean"
+    />
+  </div>
+
+  <div class="form-group">
+    <label>{{localize "FPG.SceneConfig.EncounterChance"}}</label>
+    <div class="form-fields">
+      <input
+        type="number"
+        name="flags.{{moduleId}}.exploration.encounterChance"
+        value="{{encounterChanceField}}"
+        min="0"
+        max="100"
+        step="1"
+        placeholder="{{worldEncounterChance}}"
+        data-dtype="Number"
+      />
+      <span class="units">%</span>
+    </div>
+    <p class="hint">{{localize "FPG.SceneConfig.EncounterChanceHint"}}</p>
+  </div>
+</fieldset>

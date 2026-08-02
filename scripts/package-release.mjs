@@ -17,7 +17,8 @@ const INCLUDE = [
   "lang",
   "schemas",
   "src",
-  "styles"
+  "styles",
+  "templates"
 ];
 
 function copyReleaseTree() {

@@ -2,26 +2,17 @@ import { MODULE_ID, SETTINGS } from "./constants.js";
 
 export function registerSettings() {
   game.settings.register(MODULE_ID, SETTINGS.ENABLED, {
-    name: "Enable exploration triggers",
-    hint: "Allow the designated party Token to trigger encounter checks.",
+    name: "FPG.Settings.EnabledName",
+    hint: "FPG.Settings.EnabledHint",
     scope: "world",
     config: true,
     type: Boolean,
     default: true
   });
 
-  game.settings.register(MODULE_ID, SETTINGS.EXPLORATION_SCENE_UUID, {
-    name: "Exploration Scene UUID",
-    hint: "Example: Scene.abc123",
-    scope: "world",
-    config: true,
-    type: String,
-    default: ""
-  });
-
   game.settings.register(MODULE_ID, SETTINGS.PARTY_TOKEN_UUID, {
-    name: "Party Token UUID",
-    hint: "Example: Scene.abc123.Token.def456",
+    name: "FPG.Settings.PartyTokenName",
+    hint: "FPG.Settings.PartyTokenHint",
     scope: "world",
     config: true,
     type: String,
@@ -29,8 +20,8 @@ export function registerSettings() {
   });
 
   game.settings.register(MODULE_ID, SETTINGS.ENCOUNTER_CHANCE, {
-    name: "Encounter chance",
-    hint: "Percentage chance for each newly entered exploration square.",
+    name: "FPG.Settings.EncounterChanceName",
+    hint: "FPG.Settings.EncounterChanceHint",
     scope: "world",
     config: true,
     type: Number,
@@ -39,8 +30,8 @@ export function registerSettings() {
   });
 
   game.settings.register(MODULE_ID, SETTINGS.PROTOTYPE_WIDTH_CELLS, {
-    name: "Prototype width",
-    hint: "Generated Scene width in tactical grid cells.",
+    name: "FPG.Settings.PrototypeWidthName",
+    hint: "FPG.Settings.PrototypeWidthHint",
     scope: "world",
     config: true,
     type: Number,
@@ -49,8 +40,8 @@ export function registerSettings() {
   });
 
   game.settings.register(MODULE_ID, SETTINGS.PROTOTYPE_HEIGHT_CELLS, {
-    name: "Prototype height",
-    hint: "Generated Scene height in tactical grid cells.",
+    name: "FPG.Settings.PrototypeHeightName",
+    hint: "FPG.Settings.PrototypeHeightHint",
     scope: "world",
     config: true,
     type: Number,
@@ -59,8 +50,8 @@ export function registerSettings() {
   });
 
   game.settings.register(MODULE_ID, SETTINGS.AUTO_ACTIVATE, {
-    name: "Auto-activate generated Scene",
-    hint: "Activate the encounter Scene immediately after generation.",
+    name: "FPG.Settings.AutoActivateName",
+    hint: "FPG.Settings.AutoActivateHint",
     scope: "world",
     config: true,
     type: Boolean,
@@ -68,7 +59,7 @@ export function registerSettings() {
   });
 
   game.settings.register(MODULE_ID, SETTINGS.DEBUG_LEVEL, {
-    name: "Log level",
+    name: "FPG.Settings.DebugLevelName",
     scope: "client",
     config: true,
     type: String,

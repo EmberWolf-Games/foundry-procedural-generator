@@ -1,10 +1,9 @@
 export const MODULE_ID = "foundry-procedural-generator";
 export const MODULE_TITLE = "Foundry Procedural Generator";
-export const MODULE_VERSION = "0.1.101-pre";
+export const MODULE_VERSION = "0.1.102-pre";
 
 export const SETTINGS = Object.freeze({
   ENABLED: "enabled",
-  EXPLORATION_SCENE_UUID: "explorationSceneUuid",
   PARTY_TOKEN_UUID: "partyTokenUuid",
   ENCOUNTER_CHANCE: "encounterChance",
   PROTOTYPE_WIDTH_CELLS: "prototypeWidthCells",
@@ -14,6 +13,7 @@ export const SETTINGS = Object.freeze({
 });
 
 export const FLAGS = Object.freeze({
+  EXPLORATION: "exploration",
   EXPLORATION_STATE: "explorationState",
   GENERATED: "generated",
   MANIFEST: "manifest"
@@ -21,7 +21,9 @@ export const FLAGS = Object.freeze({
 
 export const SUPPORTED = Object.freeze({
   FOUNDRY_MINIMUM: "13.351",
+  FOUNDRY_VERIFIED: "13.351",
   DND5E_MINIMUM: "5.3.3",
+  DND5E_VERIFIED: "5.3.3",
   MODULES: Object.freeze({
     MIDI_QOL: Object.freeze({ id: "midi-qol", minimum: "13.0.57" }),
     MONKS_ACTIVE_TILES: Object.freeze({ id: "monks-active-tiles", minimum: "13.06" }),

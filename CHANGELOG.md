@@ -2,7 +2,13 @@
 
 All notable changes use the versioning scheme in `docs/VERSIONING.md` (`M.m.b[-hf#][-release]`).
 
-## 0.1.101-pre — Fix Foundry manifest install from GitHub releases
+## Unreleased
+
+## 0.1.102-pre — Per-Scene random encounters and compatibility verified
+
+- Set Foundry `compatibility.verified` to `13.351` and D&D 5e relationship `verified` to `5.3.3` so Module Management reports compatibility instead of unknown.
+- Replace world-level Exploration Scene UUID setting with per-Scene **Random Encounters** flagging in Scene Configuration.
+- Support optional per-Scene encounter chance override; world default and party Token UUID remain in module settings.
 
 - Force GitHub releases to `prerelease: false` so `/releases/latest/download/` resolves during pre-alpha.
 - Add CI verification that manifest and zip URLs are publicly reachable (matches Foundry install behavior).

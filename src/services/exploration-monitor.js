@@ -2,6 +2,7 @@ import { MODULE_ID, SETTINGS } from "../constants.js";
 import { tokenCellKey } from "../core/grid.js";
 import { processEnteredCell } from "./encounter-orchestrator.js";
 import { MOVEMENT_SETTLE_DELAY_MS } from "../integrations/monks-active-tiles-guard.js";
+import { isRandomEncounterScene } from "../persistence/scene-exploration-config.js";
 import { log } from "../log.js";
 
 const pending = new Map();
@@ -10,15 +11,20 @@ function isAuthoritativeGM() {
   return Boolean(game.user?.isGM && game.users?.activeGM?.id === game.user.id);
 }
 
+function isModuleEnabled() {
+  return Boolean(game.settings.get(MODULE_ID, SETTINGS.ENABLED));
+}
+
 function matchesConfiguredToken(tokenDocument) {
-  const enabled = game.settings.get(MODULE_ID, SETTINGS.ENABLED);
-  if (!enabled) return false;
+  if (!isModuleEnabled()) return false;
 
-  const configuredSceneUuid = game.settings.get(MODULE_ID, SETTINGS.EXPLORATION_SCENE_UUID);
+  const scene = tokenDocument.parent;
+  if (!scene || !isRandomEncounterScene(scene)) return false;
+
   const configuredTokenUuid = game.settings.get(MODULE_ID, SETTINGS.PARTY_TOKEN_UUID);
+  if (!configuredTokenUuid) return false;
 
-  return tokenDocument.parent?.uuid === configuredSceneUuid
-    && tokenDocument.uuid === configuredTokenUuid;
+  return tokenDocument.uuid === configuredTokenUuid;
 }
 
 async function evaluateSettledToken(sceneId, tokenId) {
@@ -28,7 +34,7 @@ async function evaluateSettledToken(sceneId, tokenId) {
 
   try {
     const cellKey = tokenCellKey(tokenDocument);
-    log.debug("Party Token settled in exploration cell.", {
+    log.debug("Party Token settled in random-encounter Scene cell.", {
       tokenUuid: tokenDocument.uuid,
       sceneUuid: tokenDocument.parent.uuid,
       cellKey
