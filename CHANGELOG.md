@@ -4,6 +4,10 @@ All notable changes use the versioning scheme in `docs/VERSIONING.md` (`M.m.b[-h
 
 ## Unreleased
 
+## 0.1.103-pre — Fix Scene config Random Encounters panel
+
+- Fix missing `SETTINGS` import that prevented the Random Encounters section from rendering in Scene Configuration.
+
 ## 0.1.102-pre — Per-Scene random encounters and compatibility verified
 
 - Set Foundry `compatibility.verified` to `13.351` and D&D 5e relationship `verified` to `5.3.3` so Module Management reports compatibility instead of unknown.

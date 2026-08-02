@@ -1,4 +1,4 @@
-import { MODULE_ID, FLAGS } from "../constants.js";
+import { MODULE_ID, FLAGS, SETTINGS } from "../constants.js";
 import { normalizeSceneExplorationConfig, readSceneExplorationConfig } from "../persistence/scene-exploration-config.js";
 
 const TEMPLATE = `modules/${MODULE_ID}/templates/scene-exploration-config.hbs`;
