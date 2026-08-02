@@ -25,6 +25,14 @@ function node(tag, { className, dataTab, children = [], dataset = null } = {}) {
     }
   };
   for (const child of children) child.parentElement = el;
+  if (tag === "nav") {
+    el.querySelector = (selector) => {
+      for (const child of el.children ?? []) {
+        if (matches(child, selector)) return child;
+      }
+      return null;
+    };
+  }
   return el;
 }
 
