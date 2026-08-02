@@ -1,6 +1,6 @@
 {
   "name": "foundry-procedural-generator",
-  "version": "0.1.107-hf2-pre",
+  "version": "0.1.107.2-pre",
   "private": true,
   "type": "module",
   "scripts": {

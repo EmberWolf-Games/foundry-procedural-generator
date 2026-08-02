@@ -1,8 +1,14 @@
 # Changelog
 
-All notable changes use the versioning scheme in `docs/VERSIONING.md` (`M.m.b[-hf#][-release]`).
+All notable changes use the versioning scheme in `docs/VERSIONING.md` (`M.m.b.p[-release]`).
 
 ## Unreleased
+
+## 0.1.107.2-pre — Version scheme: four-part patch segment
+
+- Replace `M.m.b-hf#-release` with **`M.m.b.p-release`** (`p` always visible; `0` for feature builds, increments for patches).
+- Foundry `isNewerVersion` now sorts patches correctly (`0.1.107.1-pre` > `0.1.107.0-pre`).
+- CI post-release bumps increment **p** instead of `-hf#`.
 
 ## 0.1.107-hf1-pre — Fix Scene Encounters tab injection
 

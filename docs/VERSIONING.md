@@ -3,58 +3,73 @@
 Foundry Procedural Generator uses a structured version string:
 
 ```text
-M.m.b[-hf#][-release]
+M.m.b.p[-release]
 ```
 
 ## Fields
 
 | Field | Range | Meaning |
 |---|---|---|
-| **M** (major) | 0–999 | Stays `0` until the first full public release (`1.x.x`). Increments only for full release milestones. |
-| **m** (minor) | 0–999 | Starts at `1` during pre-release. Increments with each major feature milestone (for example M1 → `0.1.x`, M2 → `0.2.x`). Resets to `0` after the first full release, then resets again on each major increment. |
-| **b** (build) | 100–999 | Starts at `100` for each minor line. Increments only for **meaningful feature changes** within that minor line. Resets to `100` when **m** increments. |
-| **hf#** (hotfix) | 1–999 | Omitted by default. **Patch / bugfix releases only** — append after **b** and before **release** (`0.1.107-hf1-pre`). Increment per patch on the same build; do not increment **b** for patches. |
+| **M** (major) | 0–999 | Stays `0` until the first full public release (`1.x.x.x`). Increments only for full release milestones. |
+| **m** (minor) | 0–999 | Starts at `1` during pre-release. Increments with each major feature milestone (for example M1 → `0.1.x.x`, M2 → `0.2.x.x`). Resets to `0` after the first full release, then resets again on each major increment. |
+| **b** (build) | 100–999 | Starts at `100` for each minor line. Increments only for **meaningful feature changes**. Resets to `100` when **m** increments. |
+| **p** (patch) | 0–999 | Always present. Defaults to `0` for feature builds. Increments by `1` for each bugfix/patch on the same **b**. |
 | **release** | `pre`, `alpha`, `beta`, `rc` | Pre-release channel suffix. Omitted after full release (`M >= 1` and channel complete). |
 
 ## Examples
 
 ```text
-0.1.107-hf2-pre
+0.1.107.0-pre
 ```
 
-Patch release 2 on build `107` (bugfix only; build number unchanged).
+Feature build `107` on minor line `1` (no patches yet).
 
 ```text
-0.1.108-pre
+0.1.107.2-pre
 ```
 
-Meaningful feature update on minor line `1` (build incremented from `107`).
+Patch release 2 on build `107` (bugfix only; **b** unchanged).
 
 ```text
-1.0.361
+0.1.108.0-pre
 ```
 
-Full release major `1`, minor `0`, build `361`. No hotfix suffix. No release suffix.
+Next meaningful feature update (build incremented; patch reset to `0`).
+
+```text
+1.0.361.0
+```
+
+Full release. No channel suffix.
 
 ## Bump rules (summary)
 
-1. **Minor feature milestone complete** (for example M1 proven, starting M2 work): increment **m**, reset **b** to `100`, clear **hf#**, keep **release** until channel promotion.
-2. **Meaningful feature update** within a milestone line: increment **b** only; clear **hf#**.
-3. **Patch / bugfix** on a shipped build: keep **b** unchanged; append or increment `-hf#` before `-release`. Never increment **b** for patches.
+1. **Minor feature milestone complete** (for example M1 proven, starting M2 work): increment **m**, reset **b** to `100`, reset **p** to `0`, keep **release** until channel promotion.
+2. **Meaningful feature update** within a milestone line: increment **b**, reset **p** to `0`.
+3. **Patch / bugfix** on a shipped build: keep **M**, **m**, and **b** unchanged; increment **p** by `1`.
 4. **Channel promotion**: change `-release` (`pre` → `alpha` → `beta` → `rc`); omit after full release.
-5. **Full release**: set **M** to `1`, reset **m** to `0`, continue incrementing **b** from `100`; omit `-release`.
+5. **Full release**: set **M** to `1`, reset **m** to `0`, set **b** / **p** as needed; omit `-release`.
 
-**Owner rule:** CI must not auto-increment **b** after every release. Post-release prep increments **hf#** only. Manual **b** bumps happen when landing meaningful feature work.
+**Owner rule:** CI auto-increments **p** after each release. Manual **b** bumps happen only when landing meaningful feature work.
 
-## Foundry update detection (advisory)
+## Foundry update detection
 
-Foundry compares versions with `foundry.utils.isNewerVersion` (dot-separated numeric segments). Implications:
+Foundry uses `foundry.utils.isNewerVersion`, which compares dot-separated numeric segments. The four-part scheme makes patches sort correctly:
 
-- A patch must stay on the same **b** as the installed build (for example `0.1.107-pre` → `0.1.107-hf1-pre`).
-- Do not publish patches on a lower **b** than worlds already have (for example `0.1.102-hf4-pre` will not update from `0.1.105-pre`).
-- After erroneous build-only releases, one **b** bump may be required to restore update paths; avoid those by following the rules above.
+- `0.1.107.1-pre` is newer than `0.1.107.0-pre` and legacy `0.1.107-pre`
+- `0.1.108.0-pre` is newer than `0.1.107.2-pre`
 
 Run `node tests/version-compare.test.mjs` when unsure whether a version sorts newer than an installed manifest.
+
+## Legacy format
+
+Older releases used `M.m.b[-hf#][-release]` (for example `0.1.107-hf1-pre`). The version script still parses those strings for migration, but all new releases must use `M.m.b.p[-release]`.
+
+| Legacy | New |
+|---|---|
+| `0.1.107-pre` | `0.1.107.0-pre` |
+| `0.1.107-hf1-pre` | `0.1.107.1-pre` |
+| `0.1.107-hf2-pre` | `0.1.107.2-pre` |
 
 ## Files to update together
 
@@ -74,8 +89,8 @@ Each push to `main` (except commits tagged `[skip ci]`) runs `.github/workflows/
 
 1. Runs `npm test`.
 2. Packages `dist/foundry-procedural-generator.zip` and a release `module.json` with stable Foundry update URLs.
-3. Creates a GitHub Release tagged with the current version (for example `0.1.107-pre`).
-4. Auto-increments **hf#** on the current build and commits the next version with `[skip ci]` (for example `0.1.107-hf1-pre`).
+3. Creates a GitHub Release tagged with the current version (for example `0.1.107.2-pre`).
+4. Auto-increments **p** on the current build and commits the next version with `[skip ci]` (for example `0.1.107.3-pre`).
 
 ### Foundry / Forge update detection
 
@@ -99,8 +114,8 @@ See `docs/INSTALL.md` for verification commands and fixes.
 
 ### Manual version changes
 
-- **Patch:** `node scripts/version.mjs bump-hotfix`
-- **Meaningful feature on same minor line:** `node scripts/version.mjs bump-build` (clears hotfix suffix)
-- **Explicit write:** `node scripts/version.mjs write "0.1.107-hf2-pre"`
+- **Patch:** `node scripts/version.mjs bump-patch`
+- **Meaningful feature on same minor line:** `node scripts/version.mjs bump-build` (resets **p** to `0`)
+- **Explicit write:** `node scripts/version.mjs write "0.1.107.3-pre"`
 
-Commit the new version before pushing a release. CI will release that version and then bump **hf#** for the next patch slot.
+Commit the new version before pushing a release. CI will release that version and then bump **p** for the next patch slot.

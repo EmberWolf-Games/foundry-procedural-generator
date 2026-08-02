@@ -24,7 +24,7 @@ The layout/generation core remains system-independent, but the distributable mod
 - API baseline: Foundry v13 public API, isolated behind version-aware adapters
 - Integration targets: Midi QOL, Monk's Active Tile Triggers, Seasons & Stars
 - Module ID: `foundry-procedural-generator`
-- Working version: `0.1.100-pre` (see `docs/VERSIONING.md`)
+- Working version: see `module.json` (format `M.m.b.p[-release]` in `docs/VERSIONING.md`)
 
 ## Install for development
 

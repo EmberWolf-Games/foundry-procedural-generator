@@ -70,11 +70,11 @@ jobs:
           echo "Checking $ZIP_URL"
           curl -fsSLI "$ZIP_URL" | grep -i '^HTTP/.* 200'
 
-      - name: Bump hotfix for next release
+      - name: Bump patch for next release
         id: next
-        run: echo "value=$(node scripts/version.mjs bump-hotfix)" >> "$GITHUB_OUTPUT"
+        run: echo "value=$(node scripts/version.mjs bump-patch)" >> "$GITHUB_OUTPUT"
 
-      - name: Commit next hotfix version
+      - name: Commit next patch version
         run: |
           node scripts/version.mjs write "${{ steps.next.outputs.value }}"
           git config user.name "github-actions[bot]"
