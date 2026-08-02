@@ -1,0 +1,75 @@
+{
+  "id": "foundry-procedural-generator",
+  "title": "Foundry Procedural Generator",
+  "description": "Deterministic procedural encounter generation for D&D 5e exploration scenes, with integration support for Midi QOL, Monk's Active Tile Triggers, and Seasons & Stars.",
+  "version": "0.1.100-pre",
+  "authors": [
+    {
+      "name": "Project Owner"
+    }
+  ],
+  "compatibility": {
+    "minimum": "13.351"
+  },
+  "esmodules": [
+    "src/main.js"
+  ],
+  "styles": [
+    "styles/fpg.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "socket": true,
+  "license": "LICENSE",
+  "readme": "README.md",
+  "system": [
+    "dnd5e"
+  ],
+  "relationships": {
+    "systems": [
+      {
+        "id": "dnd5e",
+        "type": "system",
+        "compatibility": {
+          "minimum": "5.3.3"
+        }
+      }
+    ],
+    "recommends": [
+      {
+        "id": "midi-qol",
+        "type": "module",
+        "compatibility": {
+          "minimum": "13.0.57"
+        },
+        "reason": "Supported combat automation integration for generated D&D 5e encounters."
+      },
+      {
+        "id": "monks-active-tiles",
+        "type": "module",
+        "compatibility": {
+          "minimum": "13.06"
+        },
+        "reason": "Explicit coexistence target; procedural exploration triggers use an isolated movement pipeline."
+      },
+      {
+        "id": "seasons-and-stars",
+        "type": "module",
+        "compatibility": {
+          "minimum": "0.26.0"
+        },
+        "reason": "Provides calendar, season, sunrise/sunset, and time-of-day context for encounter eligibility."
+      }
+    ]
+  },
+  "url": "https://github.com/EmberWolf-Games/foundry-procedural-generator",
+  "manifest": "https://github.com/EmberWolf-Games/foundry-procedural-generator/releases/latest/download/module.json",
+  "download": "https://github.com/EmberWolf-Games/foundry-procedural-generator/releases/latest/download/foundry-procedural-generator.zip",
+  "changelog": "https://github.com/EmberWolf-Games/foundry-procedural-generator/blob/main/CHANGELOG.md",
+  "bugs": "https://github.com/EmberWolf-Games/foundry-procedural-generator/issues"
+}

@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/fpg/encounter.schema.json",
+  "title": "FPG Encounter Profile",
+  "type": "object",
+  "required": [
+    "id",
+    "schemaVersion",
+    "revision",
+    "name",
+    "tags",
+    "weight",
+    "participants"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "schemaVersion": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "biomeIds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "generationProfileIds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "weight": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "eligibility": {
+      "type": "object"
+    },
+    "objectives": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "participants": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "actorUuid",
+          "count",
+          "role"
+        ],
+        "properties": {
+          "actorUuid": {
+            "type": "string"
+          },
+          "count": {
+            "type": "object"
+          },
+          "role": {
+            "type": "string"
+          },
+          "spawnZoneTags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "disposition": {
+            "type": "integer"
+          },
+          "hidden": {
+            "type": "boolean"
+          },
+          "spacingCells": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "hazards": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "treasure": {
+      "type": "object"
+    },
+    "tacticalRequirements": {
+      "type": "object"
+    },
+    "resolution": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}

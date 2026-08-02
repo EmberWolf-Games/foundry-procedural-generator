@@ -1,0 +1,8 @@
+.foundry-procedural-generator .fpg-error {
+  font-weight: 700;
+}
+
+.foundry-procedural-generator .fpg-diagnostic {
+  font-family: monospace;
+  white-space: pre-wrap;
+}

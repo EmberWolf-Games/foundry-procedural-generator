@@ -1,0 +1,130 @@
+---
+description: Foundry Procedural Generator project context and non-negotiable engineering rules
+alwaysApply: true
+---
+
+# Foundry Procedural Generator — Cursor Rules
+
+## Project identity
+
+- Canonical repo: `https://github.com/EmberWolf-Games/foundry-procedural-generator.git`
+- Module ID: `foundry-procedural-generator`
+- Current version: `0.1.100-pre` (see `docs/VERSIONING.md`)
+- Read `CURSOR_HANDOFF.md` and all files in `docs/` before substantive edits.
+
+## Mission
+
+Build a deterministic Foundry VTT encounter generator triggered by a designated party Token entering eligible cells on a campaign-scale exploration Scene. Generated tactical Scenes must eventually be complete, reproducible, navigable, performant, maintainable, and diagnosable.
+
+## Platform contract
+
+- Foundry minimum: `13.351`
+- Required system: D&D 5e `5.3.3+`
+- Compatibility targets: Midi QOL `13.0.57+`, Monk's Active Tile Triggers `13.06+`, Seasons & Stars `0.26.0+`
+- Optional integrations must be feature-detected and must degrade safely.
+- Do not claim a Foundry generation or integration version is verified without recorded testing.
+
+## Source authority
+
+For Foundry behavior, use official documentation:
+
+- `https://foundryvtt.com/article/module-development/`
+- `https://foundryvtt.com/api/`
+
+Never guess API signatures or use private/underscore-prefixed Foundry methods. Isolate version differences in adapters.
+
+## Architecture boundary
+
+Use a functional core / Foundry shell.
+
+Pure core and generator code:
+
+- Receives validated plain data and explicit seeded RNG streams
+- Produces serializable plans and diagnostics
+- Must not access Foundry globals such as `game`, `canvas`, `Hooks`, `Scene`, `CONST`, or `fromUuid`
+- Must run under Node tests
+
+Foundry shell/adapters:
+
+- Read Documents/settings/flags and resolve UUIDs
+- Convert semantic plan values to Foundry constants
+- Commit Scenes and embedded Documents in batches
+- Own activation, persistence, notifications, and version compatibility
+- Must not make procedural random decisions
+
+## Determinism rules
+
+- Store a root seed and canonical seed material for every encounter.
+- Use named streams: `check`, `encounter`, `layout`, `zones`, `terrain`, `walls`, `ambience`, `creatures`, `hazards`, `loot`.
+- Random draws in one stage must not perturb another stage.
+- Snapshot mutable inputs, profile revisions, resolved selections, time context, retries, generator version, validation results, timings, and Document counts.
+- Never introduce `Math.random()` into generation.
+
+## Runtime authority and safety
+
+- Only `game.users.activeGM` performs persistent generation.
+- Prevent duplicate work with transient locks plus durable cell state.
+- Validate plans before committing Foundry Documents.
+- Batch embedded-document creation by type.
+- Tag generated Scenes/Documents under `flags.foundry-procedural-generator`.
+- Cleanup may delete only explicitly tagged generated content and must never delete the source exploration Scene.
+- Keep Document budgets bounded; never create one Tile per floor cell.
+
+## Integration boundaries
+
+### Midi QOL
+
+- Midi owns attacks, saves, damage, targeting, reactions, concentration, effects, and workflows.
+- Generate standard D&D 5e Documents.
+- Do not override Item use or Midi workflow internals.
+- Use the narrow feature-detected adapter only for explicit automated Item use.
+
+### Monk's Active Tile Triggers
+
+- Never create or mutate `flags.monks-active-tiles`.
+- Exploration checks are not MATT Tile triggers.
+- Preserve the settled-movement debounce and authoritative Token re-read.
+- Test movement, stop, redirect, teleport, pause, and chained actions.
+
+### Seasons & Stars
+
+- Consume read-only calendar/time context.
+- Prefer `game.seasonsStars.integration.api`; feature-detect fallback APIs.
+- Snapshot time context at encounter-check time.
+- Do not advance time without an explicit owner-approved policy.
+- Fall back safely to Foundry world time.
+
+## Current milestone
+
+The project is completing M1: trigger-to-Scene vertical slice. Do not begin M2 procedural layout work until M1 is proven inside Foundry.
+
+M1 must prove:
+
+- Module loads in target Foundry/D&D 5e versions
+- One new cell produces one authoritative check
+- 0% and 100% checks behave correctly
+- Revisit default prevents duplicate generation
+- Same seed gives same plan
+- Scene and Wall Documents are valid
+- Manifest, return, and cleanup behavior are safe
+- Optional modules do not conflict
+- Exact test versions and results are documented
+
+## Coding rules
+
+- Use modern plain JavaScript ES modules unless the owner approves a tooling migration.
+- Keep project IDs/settings/flags/hooks centralized.
+- Add tests for all pure logic.
+- Preserve stored-data schema versions and add migrations for semantic changes.
+- Update README, changelog, and design docs when behavior changes.
+- Avoid dependencies without a documented rationale, license review, and browser impact.
+- Do not commit campaign assets, credentials, campaign salts, or other secrets.
+- Do not invent unresolved campaign decisions; consult `docs/campaign-decisions.md` and ask the owner.
+
+## Before large edits
+
+1. Run `npm test`.
+2. State what is implemented versus scaffolded.
+3. Identify the smallest safe change.
+4. Explain determinism, persistence, compatibility, and migration impact.
+5. Cite official API documentation for Foundry-specific changes.

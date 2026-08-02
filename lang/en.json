@@ -1,0 +1,4 @@
+{
+  "FPG.Title": "Foundry Procedural Generator",
+  "FPG.Notification.GenerationFailed": "Procedural encounter generation failed. See the console for details."
+}

@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/fpg/generation-profile.schema.json",
+  "title": "FPG Generation Profile",
+  "type": "object",
+  "required": [
+    "id",
+    "schemaVersion",
+    "revision",
+    "name",
+    "scene",
+    "layout",
+    "budgets",
+    "validation"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "schemaVersion": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "scene": {
+      "type": "object",
+      "required": [
+        "widthCells",
+        "heightCells",
+        "gridSizePixels",
+        "gridDistance",
+        "gridUnits"
+      ],
+      "properties": {
+        "widthCells": {
+          "type": "integer",
+          "minimum": 8
+        },
+        "heightCells": {
+          "type": "integer",
+          "minimum": 8
+        },
+        "gridSizePixels": {
+          "type": "integer",
+          "minimum": 50
+        },
+        "gridDistance": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "gridUnits": {
+          "type": "string"
+        },
+        "padding": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 0.5
+        },
+        "tokenVision": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    },
+    "layout": {
+      "type": "object"
+    },
+    "zones": {
+      "type": "object"
+    },
+    "placement": {
+      "type": "object"
+    },
+    "walls": {
+      "type": "object"
+    },
+    "ambience": {
+      "type": "object"
+    },
+    "budgets": {
+      "type": "object"
+    },
+    "validation": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}

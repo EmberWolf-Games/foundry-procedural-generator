@@ -1,0 +1,69 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-main
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: Read release version
+        id: version
+        run: echo "value=$(node scripts/version.mjs print)" >> "$GITHUB_OUTPUT"
+
+      - name: Package module for Foundry
+        run: node scripts/package-release.mjs
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.value }}
+          name: Foundry Procedural Generator ${{ steps.version.outputs.value }}
+          body: |
+            Automated release for `${{ steps.version.outputs.value }}`.
+
+            Foundry VTT update check uses the stable `manifest` and `download` URLs in `module.json`.
+            Install or update from **Module Management → Install Module → Manifest URL**:
+
+            `https://github.com/EmberWolf-Games/foundry-procedural-generator/releases/latest/download/module.json`
+          files: |
+            dist/foundry-procedural-generator.zip
+            dist/module.json
+          generate_release_notes: true
+          make_latest: true
+
+      - name: Bump build for next release
+        id: next
+        run: echo "value=$(node scripts/version.mjs bump-build)" >> "$GITHUB_OUTPUT"
+
+      - name: Commit next build version
+        run: |
+          node scripts/version.mjs write "${{ steps.next.outputs.value }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/constants.js module.json package.json
+          git commit -m "chore(release): bump version to ${{ steps.next.outputs.value }} [skip ci]"
+          git push

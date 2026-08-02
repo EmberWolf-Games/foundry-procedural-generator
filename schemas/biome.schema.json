@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/fpg/biome.schema.json",
+  "title": "FPG Biome",
+  "type": "object",
+  "required": [
+    "id",
+    "schemaVersion",
+    "revision",
+    "name",
+    "tags",
+    "generationProfileIds",
+    "environment",
+    "assetPools"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]+$"
+    },
+    "schemaVersion": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "generationProfileIds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "environment": {
+      "type": "object"
+    },
+    "terrain": {
+      "type": "object"
+    },
+    "assetPools": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "assetId",
+            "weight"
+          ],
+          "properties": {
+            "assetId": {
+              "type": "string"
+            },
+            "weight": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "constraints": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}

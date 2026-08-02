@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/fpg/asset.schema.json",
+  "title": "FPG Asset",
+  "type": "object",
+  "required": [
+    "id",
+    "schemaVersion",
+    "revision",
+    "name",
+    "kind",
+    "tags",
+    "source",
+    "footprint",
+    "placement"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "schemaVersion": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "kind": {
+      "enum": [
+        "tile",
+        "actor",
+        "hazard",
+        "light",
+        "sound",
+        "wall-template",
+        "region-template",
+        "objective",
+        "treasure"
+      ]
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "source": {
+      "type": "object",
+      "properties": {
+        "texture": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "documentUuid": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "footprint": {
+      "type": "object"
+    },
+    "placement": {
+      "type": "object"
+    },
+    "occlusion": {
+      "type": "object"
+    },
+    "render": {
+      "type": "object"
+    },
+    "compatibility": {
+      "type": "object"
+    },
+    "provenance": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}
