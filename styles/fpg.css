@@ -7,13 +7,10 @@
   white-space: pre-wrap;
 }
 
-.scene-config .fpg-scene-exploration {
+.application.scene-config section.tab[data-tab="basics"] .fpg-scene-exploration {
   margin-top: 0.75rem;
-  padding: 0.75rem;
-  border: 1px solid var(--color-border-light-primary);
-  border-radius: 4px;
 }
 
-.scene-config .fpg-scene-exploration legend {
+.application.scene-config section.tab[data-tab="basics"] .fpg-scene-exploration legend {
   font-weight: 600;
 }

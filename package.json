@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node tests/rng.test.mjs && node tests/prototype-generator.test.mjs && node tests/seasons-stars-adapter.test.mjs && node tests/scene-exploration-config.test.mjs",
+    "test": "node tests/rng.test.mjs && node tests/prototype-generator.test.mjs && node tests/seasons-stars-adapter.test.mjs && node tests/scene-exploration-config.test.mjs && node tests/scene-config-ui.test.mjs",
     "version:print": "node scripts/version.mjs print",
     "version:bump-build": "node scripts/version.mjs bump-build",
     "package:release": "node scripts/package-release.mjs"

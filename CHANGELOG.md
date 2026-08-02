@@ -4,6 +4,11 @@ All notable changes use the versioning scheme in `docs/VERSIONING.md` (`M.m.b[-h
 
 ## Unreleased
 
+## 0.1.104-pre — Fix Scene config layout deformation
+
+- Target the Basics tab **content panel** (`section.tab[data-tab="basics"]`) instead of the tab nav link, which was breaking Scene Configuration layout in v13.
+- Remove duplicate `renderSceneConfig` hook; inject only via `renderApplicationV2` on `SceneConfig`.
+
 ## 0.1.103-pre — Fix Scene config Random Encounters panel
 
 - Fix missing `SETTINGS` import that prevented the Random Encounters section from rendering in Scene Configuration.

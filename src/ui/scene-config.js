@@ -3,14 +3,27 @@ import { normalizeSceneExplorationConfig, readSceneExplorationConfig } from "../
 
 const TEMPLATE = `modules/${MODULE_ID}/templates/scene-exploration-config.hbs`;
 
-function basicsTab(element) {
-  return element.querySelector('[data-tab="basics"]')
-    ?? element.querySelector(".tab[data-tab='basics']")
-    ?? element.querySelector("section.tab.basics");
+function resolveElement(element) {
+  if (!element) return null;
+  if (typeof jQuery !== "undefined" && element instanceof jQuery) return element[0];
+  return element;
+}
+
+/** Tab content panel only — never match nav links that also use data-tab. */
+export function basicsTab(element) {
+  const root = resolveElement(element);
+  if (!root?.querySelector) return null;
+
+  return root.querySelector('section.tab[data-tab="basics"]')
+    ?? root.querySelector('section[data-tab="basics"]');
+}
+
+function isSceneConfigApp(app) {
+  return app?.constructor?.name === "SceneConfig";
 }
 
 export async function injectSceneExplorationConfig(app, element) {
-  if (!game.user.isGM || !app.document) return;
+  if (!game.user.isGM || !isSceneConfigApp(app) || !app.document) return;
 
   const tab = basicsTab(element);
   if (!tab || tab.querySelector(".fpg-scene-exploration")) return;
@@ -32,12 +45,7 @@ export function registerSceneConfigHook() {
     loadTemplates([TEMPLATE]);
   });
 
-  Hooks.on("renderSceneConfig", (app, element) => {
-    injectSceneExplorationConfig(app, element).catch(onRenderError);
-  });
-
   Hooks.on("renderApplicationV2", (app, element) => {
-    if (app.document?.documentName !== "Scene") return;
     injectSceneExplorationConfig(app, element).catch(onRenderError);
   });
 
