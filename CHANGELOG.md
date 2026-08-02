@@ -4,6 +4,11 @@ All notable changes use the versioning scheme in `docs/VERSIONING.md` (`M.m.b.p[
 
 ## Unreleased
 
+## 0.1.108.2.pre — Clickable Encounters tab
+
+- Fix Scene Configuration Encounters tab not responding to clicks (`data-action="tab"` for ApplicationV2).
+- Align Encounters form layout with Foundry v13 checkbox/notes patterns.
+
 ## 0.1.108.1.pre — Foundry-compatible versioning + Encounters tab fix
 
 - Foundry cannot treat `0.1.107.2-pre` as newer than `0.1.107-pre` (non-numeric segments like `2-pre`).

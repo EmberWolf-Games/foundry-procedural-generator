@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
 import {
+  buildEncountersTabNavMarkup,
+  buildEncountersTabPanelMarkup,
   encountersTabNav,
   encountersTabPanel,
   findTabContainer,
@@ -82,6 +84,10 @@ function matches(element, selector) {
       && element.classList.contains("tab")
       && element.dataset.group === "sheet";
   }
+  if (selector === '.tab[data-group="sheet"]') {
+    return element.classList.contains("tab")
+      && element.dataset.group === "sheet";
+  }
   if (selector === 'a.item[data-tab="fpg-encounters"]') {
     return element.tagName === "A"
       && element.classList.contains("item")
@@ -91,6 +97,11 @@ function matches(element, selector) {
     return element.tagName === "SECTION"
       && element.classList.contains("tab")
       && element.dataset.tab === "fpg-encounters";
+  }
+  if (selector === '.tab[data-tab="fpg-encounters"][data-group="sheet"]') {
+    return element.classList.contains("tab")
+      && element.dataset.tab === "fpg-encounters"
+      && element.dataset.group === "sheet";
   }
   if (selector === '[data-tab="fpg-encounters"]:not(.item)') {
     return element.dataset.tab === "fpg-encounters" && !element.classList.contains("item");
@@ -120,5 +131,15 @@ assert.equal(encountersTabPanel(root), panel);
 
 assert.equal(isSceneConfigApp({ document: { documentName: "Scene" }, options: { classes: ["scene-config"] } }), true);
 assert.equal(isSceneConfigApp({ document: { documentName: "Actor" }, options: { classes: ["actor-sheet"] } }), false);
+
+const navMarkup = buildEncountersTabNavMarkup({ label: "Encounters", tooltip: "Random encounters" });
+assert.match(navMarkup, /data-action="tab"/);
+assert.match(navMarkup, /data-tab="fpg-encounters"/);
+assert.match(navMarkup, /data-group="sheet"/);
+
+const panelMarkup = buildEncountersTabPanelMarkup({ panelHtml: "<p>test</p>" });
+assert.match(panelMarkup, /class="tab"/);
+assert.match(panelMarkup, /data-tab="fpg-encounters"/);
+assert.doesNotMatch(panelMarkup, /\bactive\b/);
 
 console.log("scene-config-ui.test.mjs passed");

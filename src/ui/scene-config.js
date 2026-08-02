@@ -42,7 +42,8 @@ export function findTabNav(root) {
 export function findTabContainer(root, nav) {
   if (!root?.querySelector) return null;
 
-  const firstTabPanel = root.querySelector(`section.tab[data-group="${TAB_GROUP}"]`)
+  const firstTabPanel = root.querySelector(`.tab[data-group="${TAB_GROUP}"]`)
+    ?? root.querySelector(`section.tab[data-group="${TAB_GROUP}"]`)
     ?? root.querySelector(`[data-tab="${TAB_ID}"]:not(.item)`);
 
   if (firstTabPanel?.parentElement) return firstTabPanel.parentElement;
@@ -62,12 +63,44 @@ export function encountersTabNav(root) {
 export function encountersTabPanel(root) {
   if (!root?.querySelector) return null;
 
-  const panels = root.querySelectorAll(`section.tab[data-tab="${TAB_ID}"]`);
+  const panels = root.querySelectorAll(`.tab[data-tab="${TAB_ID}"][data-group="${TAB_GROUP}"]`);
   for (const panel of panels) {
     if (panel.closest("nav.tabs, nav[data-group]")) continue;
     return panel;
   }
   return null;
+}
+
+export function buildEncountersTabNavMarkup({ tabId = TAB_ID, tabGroup = TAB_GROUP, label, tooltip } = {}) {
+  return `
+    <a
+      class="item"
+      data-action="tab"
+      data-tab="${tabId}"
+      data-group="${tabGroup}"
+      data-tooltip="${tooltip}"
+      aria-label="${label}"
+    >
+      <i class="fa-solid fa-dice"></i>
+    </a>
+  `;
+}
+
+export function buildEncountersTabPanelMarkup({ tabId = TAB_ID, tabGroup = TAB_GROUP, panelHtml } = {}) {
+  return `
+    <section class="tab" data-tab="${tabId}" data-group="${tabGroup}">
+      ${panelHtml}
+    </section>
+  `;
+}
+
+export function prepareEncountersTab(root) {
+  const navLink = encountersTabNav(root);
+  const panel = encountersTabPanel(root);
+  if (!navLink || !panel) return;
+
+  panel.classList.remove("active");
+  navLink.classList.remove("active");
 }
 
 export function hasEncountersTab(root) {
@@ -101,23 +134,14 @@ export async function injectSceneExplorationConfig(app, element) {
 
     if (hasEncountersTab(root)) return;
 
-    nav.insertAdjacentHTML("beforeend", `
-      <a
-        class="item"
-        data-tab="${TAB_ID}"
-        data-group="${TAB_GROUP}"
-        data-tooltip="${game.i18n.localize("FPG.SceneConfig.TabTooltip")}"
-        aria-label="${game.i18n.localize("FPG.SceneConfig.TabLabel")}"
-      >
-        <i class="fa-solid fa-dice"></i>
-      </a>
-    `);
+    nav.insertAdjacentHTML("beforeend", buildEncountersTabNavMarkup({
+      label: game.i18n.localize("FPG.SceneConfig.TabLabel"),
+      tooltip: game.i18n.localize("FPG.SceneConfig.TabTooltip")
+    }));
 
-    container.insertAdjacentHTML("beforeend", `
-      <section class="tab" data-tab="${TAB_ID}" data-group="${TAB_GROUP}">
-        ${panelHtml}
-      </section>
-    `);
+    container.insertAdjacentHTML("beforeend", buildEncountersTabPanelMarkup({ panelHtml }));
+
+    prepareEncountersTab(root);
   } finally {
     pendingInjections.delete(app);
   }
