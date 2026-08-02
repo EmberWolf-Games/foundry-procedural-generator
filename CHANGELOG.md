@@ -4,6 +4,12 @@ All notable changes use the versioning scheme in `docs/VERSIONING.md` (`M.m.b[-h
 
 ## Unreleased
 
+## 0.1.107-pre — Foundry update fix (scene config Encounters tab)
+
+- Renumber to `0.1.107-pre` so Foundry detects an update from `0.1.105-pre` / `0.1.106-pre` (Foundry compares numeric build segments; `0.1.102-hf4-pre` is treated as older than `0.1.105-pre`).
+- Includes the Scene Configuration **Encounters** tab (dice icon) and all scene-config hotfix work from `0.1.102-hf4-pre`.
+- Restore CI post-release **build** bumps; document Foundry `isNewerVersion` constraints for `-pre` hotfixes.
+
 ## 0.1.102-hf4-pre — Scene config Encounters tab (hotfix)
 
 - Add a dedicated **Encounters** tab (dice icon) to Scene Configuration instead of injecting into Basics; v13 tab panels are not `section` elements, so prior selectors never matched.

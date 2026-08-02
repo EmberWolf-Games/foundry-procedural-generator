@@ -40,11 +40,11 @@ Full release major `1`, minor `0`, build `361`. No hotfix suffix (none shipped y
 
 1. **Minor feature milestone complete** (for example M1 proven, starting M2 work): increment **m**, reset **b** to `100`, keep **release** until channel promotion.
 2. **Minor feature update** within a milestone line: increment **b** only.
-3. **Hotfix** for a shipped build: append or increment `-hf#` on that build; do not increment **b** unless the hotfix is folded into the next build.
+3. **Hotfix** for a shipped build: append or increment `-hf#` on that build for changelog semantics. **Foundry update detection** uses `foundry.utils.isNewerVersion`, which compares dot-separated numeric segments only. A hotfix on a lower **b** than the installed manifest (for example `0.1.102-hf4-pre` vs installed `0.1.105-pre`) will not update. On the `-pre` channel, ship Foundry-visible hotfixes by incrementing **b** (for example `0.1.107-pre`) while documenting the hotfix nature in `CHANGELOG.md`. Reserve `-hf#` for notes when the build number already matches or exceeds installed worlds.
 4. **Channel promotion**: change `-release` (`pre` → `alpha` → `beta` → `rc`); omit after full release.
 5. **Full release**: set **M** to `1`, reset **m** to `0`, continue incrementing **b** from `100`; omit `-release`.
 
-During the M1 `0.1.102` line, patch releases use hotfix suffixes (`0.1.102-hf1-pre`, `0.1.102-hf2-pre`, …). CI bumps `-hf#` after each release until the next minor feature build.
+Do not use CI build-only bumps without functional changes. Patch releases should ship code first, then release with the next **b** or `-hf#` that Foundry will accept.
 
 ## Files to update together
 
@@ -65,7 +65,7 @@ Each push to `main` (except commits tagged `[skip ci]`) runs `.github/workflows/
 1. Runs `npm test`.
 2. Packages `dist/foundry-procedural-generator.zip` and a release `module.json` with stable Foundry update URLs.
 3. Creates a GitHub Release tagged with the current version (for example `0.1.100-pre`).
-4. Auto-increments the **hotfix** number on the current build and commits the next version with `[skip ci]`.
+4. Auto-increments the **build** number and commits the next version with `[skip ci]`.
 
 ### Foundry / Forge update detection
 
@@ -89,4 +89,4 @@ See `docs/INSTALL.md` for verification commands and fixes.
 
 ### Manual version changes
 
-Use `node scripts/version.mjs bump-build` for a local build bump, `node scripts/version.mjs bump-hotfix` for a hotfix bump, or edit `src/constants.js`, `module.json`, and `package.json` together for minor, hotfix, or channel changes. Commit the new version before pushing; CI will release that version and then bump the hotfix for the next cycle.
+Use `node scripts/version.mjs bump-build` for a local build bump, `node scripts/version.mjs bump-hotfix` for a changelog-only hotfix suffix, or edit `src/constants.js`, `module.json`, and `package.json` together. Before pushing a patch, run `node tests/version-compare.test.mjs` and ensure the new version is Foundry-newer than any published `-pre` build it replaces.

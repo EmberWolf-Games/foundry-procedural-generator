@@ -57,6 +57,24 @@ export function bumpHotfix(version) {
   return formatVersion(parts);
 }
 
+/** Mirrors Foundry's foundry.utils.isNewerVersion (dot-separated segments). */
+export function isFoundryNewer(v1, v0) {
+  const normalize = (value) => String(value ?? 0).split(".").map((segment) => {
+    const numeric = Number(segment);
+    return Number.isNaN(numeric) ? segment : numeric;
+  });
+
+  const left = normalize(v1);
+  const right = normalize(v0);
+  for (let index = 0; index < Math.max(left.length, right.length); index++) {
+    const a = left[index] ?? 0;
+    const b = right[index] ?? 0;
+    if (a > b) return true;
+    if (a < b) return false;
+  }
+  return false;
+}
+
 export function readCurrentVersion() {
   const moduleJson = JSON.parse(readFileSync(join(ROOT, "module.json"), "utf8"));
   return moduleJson.version;
