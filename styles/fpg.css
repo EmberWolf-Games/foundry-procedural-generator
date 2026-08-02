@@ -7,10 +7,11 @@
   white-space: pre-wrap;
 }
 
-.application.scene-config section.tab[data-tab="basics"] .fpg-scene-exploration {
-  margin-top: 0.75rem;
+.application.scene-config [data-tab="fpg-encounters"].fpg-scene-exploration,
+.application.scene-config section.tab[data-tab="fpg-encounters"] .fpg-scene-exploration {
+  margin-top: 0.25rem;
 }
 
-.application.scene-config section.tab[data-tab="basics"] .fpg-scene-exploration legend {
+.application.scene-config section.tab[data-tab="fpg-encounters"] .fpg-scene-exploration legend {
   font-weight: 600;
 }

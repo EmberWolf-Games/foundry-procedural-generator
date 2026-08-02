@@ -4,6 +4,12 @@ All notable changes use the versioning scheme in `docs/VERSIONING.md` (`M.m.b[-h
 
 ## Unreleased
 
+## 0.1.102-hf4-pre — Scene config Encounters tab (hotfix)
+
+- Add a dedicated **Encounters** tab (dice icon) to Scene Configuration instead of injecting into Basics; v13 tab panels are not `section` elements, so prior selectors never matched.
+- Detect SceneConfig via `foundry.applications.sheets.SceneConfig` and defer injection until after render.
+- Switch CI post-release bumps to **hotfix** (`-hf#`) instead of build increments for patch releases on the `0.1.102` line.
+
 ## 0.1.105-pre — Restore Scene config hook for Random Encounters
 
 - Use `renderSceneConfig` instead of `renderApplicationV2`; SceneConfig sets `BASE_APPLICATION` so the generic AppV2 hook never fires in v13.

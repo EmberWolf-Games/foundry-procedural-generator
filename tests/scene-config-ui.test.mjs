@@ -1,74 +1,92 @@
 import assert from "node:assert/strict";
-import { basicsTab } from "../src/ui/scene-config.js";
+import {
+  encountersTabPanel,
+  findTabContainer,
+  findTabNav,
+  isSceneConfigApp
+} from "../src/ui/scene-config.js";
 
-function node(tag, { className, dataTab, children = [] } = {}) {
+function node(tag, { className, dataTab, children = [], dataset = null } = {}) {
   const el = {
     tagName: tag.toUpperCase(),
-    classList: { contains: (value) => (className ?? "").split(" ").includes(value) },
-    dataset: dataTab ? { tab: dataTab } : {},
+    classList: {
+      contains: (value) => (className ?? "").split(" ").includes(value)
+    },
+    dataset: dataset ?? (dataTab ? { tab: dataTab, group: "sheet" } : {}),
     children,
-    matches(selector) {
-      if (selector === 'section.tab[data-tab="basics"], section[data-tab="basics"]') {
-        return el.tagName === "SECTION"
-          && el.classList.contains("tab")
-          && el.dataset.tab === "basics";
+    closest(selector) {
+      if (selector === "nav.tabs, nav[data-group]") {
+        return el.tagName === "NAV" ? el : null;
       }
-      return false;
+      return null;
     }
   };
   return el;
 }
 
 function createRoot(...children) {
-  const walk = (selector, current) => {
-    if (matches(current, selector)) return current;
-    for (const child of current.children ?? []) {
-      const found = walk(selector, child);
-      if (found) return found;
-    }
-    return null;
+  const walkAll = (current, visit) => {
+    visit(current);
+    for (const child of current.children ?? []) walkAll(child, visit);
   };
 
   return {
     querySelector(selector) {
+      let found = null;
       for (const child of children) {
-        const found = walk(selector, child);
-        if (found) return found;
+        walkAll(child, (current) => {
+          if (found) return;
+          if (matches(current, selector)) found = current;
+        });
       }
-      return null;
+      return found;
+    },
+    querySelectorAll(selector) {
+      const found = [];
+      for (const child of children) {
+        walkAll(child, (current) => {
+          if (matches(current, selector)) found.push(current);
+        });
+      }
+      return found;
     }
   };
 }
 
 function matches(element, selector) {
-  if (selector === 'section.tab[data-tab="basics"]') {
-    return element.tagName === "SECTION"
-      && element.classList.contains("tab")
-      && element.dataset.tab === "basics";
+  if (selector === 'nav.tabs[data-group="sheet"]') {
+    return element.tagName === "NAV"
+      && element.classList.contains("tabs")
+      && element.dataset.group === "sheet";
   }
-  if (selector === 'section[data-tab="basics"]') {
-    return element.tagName === "SECTION" && element.dataset.tab === "basics";
+  if (selector === 'nav[data-group="sheet"]') {
+    return element.tagName === "NAV" && element.dataset.group === "sheet";
+  }
+  if (selector === "nav.tabs") {
+    return element.tagName === "NAV" && element.classList.contains("tabs");
+  }
+  if (selector === '[data-tab="fpg-encounters"]') {
+    return element.dataset.tab === "fpg-encounters";
+  }
+  if (selector === "form") {
+    return element.tagName === "FORM";
   }
   return false;
 }
 
-const basicsSection = node("section", {
-  className: "tab",
-  dataTab: "basics",
-  children: [node("div", { className: "form-group" })]
-});
+const nav = node("nav", { className: "tabs", dataset: { group: "sheet" } });
 const navLink = node("a", { className: "item", dataTab: "basics" });
-const gridSection = node("section", { className: "tab", dataTab: "grid" });
+nav.children = [navLink];
+const form = node("form");
+const basicsPanel = node("section", { className: "tab", dataTab: "basics" });
+form.children = [basicsPanel];
+const root = createRoot(nav, form);
 
-const tab = basicsTab(createRoot(navLink, basicsSection, gridSection));
-assert.ok(tab);
-assert.equal(tab.tagName, "SECTION");
-assert.equal(tab.dataset.tab, "basics");
-assert.notEqual(tab, navLink);
+assert.equal(findTabNav(root), nav);
+assert.equal(findTabContainer(root), form);
+assert.equal(encountersTabPanel(root), null);
 
-assert.equal(basicsTab(createRoot(navLink)), null);
-
-const basicsRoot = node("section", { className: "tab", dataTab: "basics" });
-assert.equal(basicsTab(basicsRoot), basicsRoot);
+assert.equal(isSceneConfigApp({ document: { documentName: "Scene" }, options: { classes: ["scene-config"] } }), true);
+assert.equal(isSceneConfigApp({ document: { documentName: "Actor" }, options: { classes: ["actor-sheet"] } }), false);
 
 console.log("scene-config-ui.test.mjs passed");

@@ -44,6 +44,8 @@ Full release major `1`, minor `0`, build `361`. No hotfix suffix (none shipped y
 4. **Channel promotion**: change `-release` (`pre` → `alpha` → `beta` → `rc`); omit after full release.
 5. **Full release**: set **M** to `1`, reset **m** to `0`, continue incrementing **b** from `100`; omit `-release`.
 
+During the M1 `0.1.102` line, patch releases use hotfix suffixes (`0.1.102-hf1-pre`, `0.1.102-hf2-pre`, …). CI bumps `-hf#` after each release until the next minor feature build.
+
 ## Files to update together
 
 Keep these in sync on every version bump:
@@ -63,7 +65,7 @@ Each push to `main` (except commits tagged `[skip ci]`) runs `.github/workflows/
 1. Runs `npm test`.
 2. Packages `dist/foundry-procedural-generator.zip` and a release `module.json` with stable Foundry update URLs.
 3. Creates a GitHub Release tagged with the current version (for example `0.1.100-pre`).
-4. Auto-increments the **build** number and commits the next version with `[skip ci]`.
+4. Auto-increments the **hotfix** number on the current build and commits the next version with `[skip ci]`.
 
 ### Foundry / Forge update detection
 
@@ -87,4 +89,4 @@ See `docs/INSTALL.md` for verification commands and fixes.
 
 ### Manual version changes
 
-Use `node scripts/version.mjs bump-build` for a local build bump, or edit `src/constants.js`, `module.json`, and `package.json` together for minor, hotfix, or channel changes. Commit the new version before pushing; CI will release that version and then bump the build for the next cycle.
+Use `node scripts/version.mjs bump-build` for a local build bump, `node scripts/version.mjs bump-hotfix` for a hotfix bump, or edit `src/constants.js`, `module.json`, and `package.json` together for minor, hotfix, or channel changes. Commit the new version before pushing; CI will release that version and then bump the hotfix for the next cycle.

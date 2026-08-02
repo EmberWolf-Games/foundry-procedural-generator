@@ -40,6 +40,20 @@ export function bumpBuild(version) {
     throw new Error(`Build number cannot exceed 999 (current: ${parts.build}). Increment minor instead.`);
   }
   parts.build += 1;
+  parts.hotfix = null;
+  return formatVersion(parts);
+}
+
+export function bumpHotfix(version) {
+  const parts = parseVersion(version);
+  if (parts.hotfix) {
+    if (parts.hotfix >= 999) {
+      throw new Error(`Hotfix number cannot exceed 999 (current: ${parts.hotfix}). Ship a new build instead.`);
+    }
+    parts.hotfix += 1;
+  } else {
+    parts.hotfix = 1;
+  }
   return formatVersion(parts);
 }
 
@@ -78,12 +92,14 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     console.log(current);
   } else if (command === "bump-build") {
     console.log(bumpBuild(current));
+  } else if (command === "bump-hotfix") {
+    console.log(bumpHotfix(current));
   } else if (command === "write") {
     const next = process.argv[3];
     if (!next) throw new Error("write requires a version argument");
     writeVersion(next);
     console.log(next);
   } else {
-    throw new Error(`Unknown command '${command}'. Use: print | bump-build | write`);
+    throw new Error(`Unknown command '${command}'. Use: print | bump-build | bump-hotfix | write`);
   }
 }

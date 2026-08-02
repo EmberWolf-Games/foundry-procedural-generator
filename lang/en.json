@@ -14,6 +14,8 @@
   "FPG.Settings.AutoActivateName": "Auto-activate generated Scene",
   "FPG.Settings.AutoActivateHint": "Activate the encounter Scene immediately after generation.",
   "FPG.Settings.DebugLevelName": "Log level",
+  "FPG.SceneConfig.TabLabel": "Encounters",
+  "FPG.SceneConfig.TabTooltip": "Random encounter settings for this Scene",
   "FPG.SceneConfig.Legend": "Random Encounters",
   "FPG.SceneConfig.Hint": "Enable encounter checks for this Scene when the configured party Token enters a new grid cell.",
   "FPG.SceneConfig.RandomEncounters": "Random encounters enabled",
